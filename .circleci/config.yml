@@ -15,6 +15,8 @@ references:
                     xpack.watcher.enabled: false
                     ES_JAVA_OPTS: '-Xms512m -Xmx512m'
                     logger.org.elasticsearch.transport: "trace"
+        working_directory:
+            ~/proj
 
 jobs:
     curl:
@@ -22,7 +24,7 @@ jobs:
         steps:
             - run:
                 name: curl retry
-                command: ./scripts/retry curl --fail --head --output '/dev/null' --silent 'localhost:9200'
+                command: ~/proj/scripts/retry curl --fail --head --output '/dev/null' --silent 'localhost:9200'
         environment:
             MAX_TRIES: 50
 
@@ -42,6 +44,7 @@ jobs:
 
 workflows:
     version: 2
+
     curl-vs-dockerize:
         jobs:
             - curl
