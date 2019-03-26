@@ -20,7 +20,9 @@ jobs:
     curl:
         <<: *docker_job
         steps:
-            - ./script/retry curl --fail --head --output '/dev/null' --silent 'localhost:9200'
+            - run:
+                name: curl retry
+                command: ./script/retry curl --fail --head --output '/dev/null' --silent 'localhost:9200'
         environment:
             MAX_TRIES: 50
 
