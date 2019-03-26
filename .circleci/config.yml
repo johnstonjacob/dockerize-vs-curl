@@ -22,6 +22,7 @@ jobs:
     curl:
         <<: *docker_job
         steps:
+            - checkout
             - run:
                 name: curl retry
                 command: ~/proj/scripts/retry.sh curl --fail --head --output '/dev/null' --silent 'localhost:9200'
