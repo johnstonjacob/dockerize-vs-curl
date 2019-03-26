@@ -5,6 +5,11 @@ references:
     docker_job: &docker_job
         docker:
             - image: circleci/golang:1.12
+            - image: redis:3.2
+            - image: circleci/postgres:10.4-ram
+              environment:
+              - POSTGRES_USER: viewthespace
+              - POSTGRES_DB: viewthespace_test
             - image: docker.elastic.co/elasticsearch/elasticsearch:5.6.1
               environment:
                     http.host: '0.0.0.0'
