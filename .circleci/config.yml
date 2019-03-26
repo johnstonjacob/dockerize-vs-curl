@@ -1,0 +1,46 @@
+version: 2
+
+references:
+
+    docker_job: &docker_job
+        docker:
+            - image: circleci/go:1.12
+            - image: docker.elastic.co/elasticsearch/elasticsearch:5.6.1
+              environment:
+                    http.host: '0.0.0.0'
+                    http.port: 9200
+                    xpack.security.enabled: false
+                    xpack.monitoring.enabled: false
+                    xpack.graph.enabled: false
+                    xpack.watcher.enabled: false
+                    ES_JAVA_OPTS: '-Xms512m -Xmx512m'
+                    logger.org.elasticsearch.transport: "trace"
+
+jobs:
+    curl:
+        <<: *docker_job
+        steps:
+            - ./script/retry curl --fail --head --output '/dev/null' --silent 'localhost:9200'
+        environment:
+            MAX_TRIES: 50
+
+    dockerize:
+        <<: *docker_job
+        steps:
+            - run:
+                name: install dockerize
+                command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+                environment:
+                    DOCKERIZE_VERSION: v0.3.0
+            - run:
+                name: Wait for db
+                command: dockerize -wait tcp://localhost:9200
+        environment:
+            MAX_TRIES: 50
+
+workflows:
+    version: 2
+    curl-vs-dockerize:
+        jobs:
+            - curl
+            - dockerize
