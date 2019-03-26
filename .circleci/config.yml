@@ -38,7 +38,7 @@ jobs:
                     DOCKERIZE_VERSION: v0.3.0
             - run:
                 name: Wait for db
-                command: dockerize -wait tcp://localhost:9200
+                command: dockerize -wait tcp://localhost:9200 -timeout 1m
         environment:
             MAX_TRIES: 50
 
