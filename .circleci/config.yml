@@ -24,7 +24,7 @@ jobs:
         steps:
             - run:
                 name: curl retry
-                command: ~/proj/scripts/retry curl --fail --head --output '/dev/null' --silent 'localhost:9200'
+                command: ~/proj/scripts/retry.sh curl --fail --head --output '/dev/null' --silent 'localhost:9200'
         environment:
             MAX_TRIES: 50
 
