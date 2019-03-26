@@ -29,6 +29,8 @@ jobs:
         steps:
             - checkout
             - run:
+                command: curl localhost:9200/_cat/health
+            - run:
                 name: curl retry
                 command: ~/proj/scripts/retry.sh curl --fail --head --output '/dev/null' --silent 'localhost:9200'
         environment:
